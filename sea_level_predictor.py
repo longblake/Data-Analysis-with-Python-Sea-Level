@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy.stats import linregress
 
 def draw_plot():
@@ -8,7 +9,7 @@ def draw_plot():
 
 
     # Create scatter plot
-    plt.scatter(x=df.iloc[:, 0], y=df.iloc[:, 1])
+    plt.scatter(x=df.iloc[:, 0], y=df.iloc[:, 1], c = 'c')
 
     # Add labels and title
     plt.xlabel('Year')  # Label for x-axis using the column name
@@ -17,16 +18,19 @@ def draw_plot():
     
     #Year,CSIRO Adjusted Sea Level,Lower Error Bound,Upper Error Bound,NOAA Adjusted Sea Level
 
-
-    # Create first line of best fit
+    # Create lines of best fit
+    df2 = df[df.iloc[:, 0] >= 2000]
+    df2 = df2.reset_index(drop=True)
     line_1 = linregress(x=df.iloc[:, 0], y=df.iloc[:, 1])
-    plt.plot(df.iloc[:, 0],line_1.slope * df.iloc[:,0] + line_1.intercept)
+    line_2 = linregress(x=df2.iloc[:, 0], y=df2.iloc[:, 1] )
 
-    # Create second line of best fit
-    #linregress(x, y=None, alternative='two-sided')
+    extended_years = np.arange(df.iloc[0, 0], 2051)
+    extended_years_2 = np.arange(2000, 2051)
 
-    # Add labels and title
-
+    plt.plot(extended_years,line_1.slope * extended_years + line_1.intercept, c = 'b')
+    plt.plot(extended_years_2,line_2.slope * extended_years_2 + line_2.intercept, c = 'r')
+    
+    
     
     # Save plot and return data for testing (DO NOT MODIFY)
     plt.savefig('sea_level_plot.png')
